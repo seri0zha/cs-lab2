@@ -1,0 +1,31 @@
+﻿<Window x:Class="Lab_2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab_2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="1000">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition>
+
+            </ColumnDefinition>
+            <ColumnDefinition>
+
+            </ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="ThreatList" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="502" VerticalAlignment="Top" Width="496" Margin="0,67,0,0" SelectionChanged="ThreatList_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding }"/>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding }"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="496" Grid.Column="1" Margin="0,67,0,0"/>
+
+    </Grid>
+</Window>
