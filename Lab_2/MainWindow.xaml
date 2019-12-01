@@ -19,8 +19,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding }"/>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding }"/>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding Properties}"/>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding Properties}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

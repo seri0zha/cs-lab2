@@ -84,6 +84,7 @@ namespace Lab_2
                     table.Add(new TableItem(args));
                 }
             }
+            AppWindow.ThreatList.ItemsSource = table;
 
         }
 
