@@ -3,18 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace Lab_2
 {
@@ -23,76 +16,145 @@ namespace Lab_2
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static MainWindow AppWindow;
+        public int CurrentPage { get; set; }
+        public int PageCount { get; set; }
+
+        public const int ItemsPerPage = 20;
+
         public MainWindow()
         {
-            AppWindow = this;
-            AppWindow.ResizeMode = ResizeMode.NoResize;
-            if (File.Exists(@"thrlist.xlsx"))
+            InitializeComponent();
+            CurrentPage = 1;
+
+            if (File.Exists(@"thrlist.xlsx") && !(new FileInfo(@"thrlist.xlsx").Length == 0))
             {
-                ShowList();
-                /*List<TableItem> table = new List<TableItem>();
-                table.Add(new TableItem() { Name = "Test" });
-                ThreatList.ItemsSource = table;*/
+                GetPageCount();
+                ShowPage(CurrentPage);
             }
             else
             {
                 AsyncDownload();
             }
-            InitializeComponent();
-
         }
 
-        public async void AsyncDownload()
+        public Task AsyncDownload()
         {
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
                 GetExcel.Download();
-                CreateDataBase();
-                this.Dispatcher.Invoke(() =>
-                {
-                    ShowList();
-                });
+                GetPageCount();
+                ShowPage(CurrentPage);
             });
         }
 
-        public static void CreateDataBase()
+        private void ShowPage(int pageNumber)
         {
-            using (var threatList = new ExcelPackage(GetExcel.sourcePath))
-            {
-                ExcelWorksheet sourceSheet = threatList.Workbook.Worksheets[1]; // Worksheet скачанного файла       
-                sourceSheet.DeleteColumn(GetExcel.EndCol(sourceSheet) - 1, 2); // Удаление даты из локальной базы
-                threatList.Save();
-            }
-        }
+            List<Note> page = new List<Note>();
 
-        public static void ShowList()
-        {
-            List<TableItem> table = new List<TableItem>();
-            using (var dataBase = new ExcelPackage(GetExcel.sourcePath))
+            using (var dataBase = new ExcelPackage(GetExcel.downloadPath))
             {
                 ExcelWorksheet sheet = dataBase.Workbook.Worksheets[1];
-                for (int i = sheet.Dimension.Start.Row + 2; i <= sheet.Dimension.End.Row; i++)
+
+                int startRow = sheet.Dimension.Start.Row + 2;
+                startRow += (pageNumber - 1) * ItemsPerPage;
+                
+                int endRow = startRow + ItemsPerPage - 1;
+                endRow = Math.Min(endRow, sheet.Dimension.End.Row);
+               
+                for (int rowNumber = startRow; rowNumber <= endRow; rowNumber++)
                 {
-                    List<string> args = new List<string>();
-                    var range = sheet.Cells[i, 1, i, sheet.Dimension.End.Column];
-                    foreach (var el in range)
+                    List<string> rowValues = new List<string>();
+                    for (int columnNumber = 1; columnNumber <= sheet.Dimension.End.Column - 2; columnNumber++)
                     {
-                        args.Add(el.Value.ToString());
+                        string cellValue = sheet.Cells[rowNumber, columnNumber].Value?.ToString();
+                        cellValue = cellValue.Replace("_x000d_", "");
+
+                        switch (columnNumber)
+                        {
+                            case 1:
+                                cellValue = $"УБИ.{cellValue.PadLeft(3, '0')}";
+                                break;
+                            case 6:
+                            case 7:
+                            case 8:
+                                cellValue = cellValue == "1" ? "Да" : "Нет";
+                                break;
+                        }
+                        rowValues.Add(cellValue);
                     }
-                    args[0] = "УД." + Int32.Parse(args[0]).ToString("000");
-                    table.Add(new TableItem(args));
+                    page.Add(new Note(rowValues));
                 }
             }
-            AppWindow.ThreatList.ItemsSource = table;
-
+            Dispatcher.Invoke(() => {
+                ThreatList.ItemsSource = page;
+                PageNumber.Text = pageNumber.ToString();
+            });
         }
 
         private void ThreatList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var item = (ListBox)sender;
-            var test = (TableItem)item.SelectedItem;
-            MessageBox.Show(test.ToString());
+            var noteInfo = (Note)item.SelectedItem;
+            if (noteInfo != null)
+            {
+                DetailedDescription.ItemsSource = noteInfo.Properties;
+            }
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ThreatList.UnselectAll();
+            DetailedDescription.ItemsSource = null;
+            ThreatList.ItemsSource = null;
+            CurrentPage = 1;
+            PageNumber.Text = CurrentPage.ToString();
+            StartRefreshAnimation();
+            RefreshButton.IsEnabled = false;
+            await AsyncDownload();
+            RefreshButton.IsEnabled = true;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPage < PageCount)
+            {
+                ShowPage(++CurrentPage);
+            }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (CurrentPage > 1)
+            {
+                ShowPage(--CurrentPage);
+            }
+        }
+
+        private void StartRefreshAnimation()
+        {
+            RotateTransform rotatingToAnimate = this.Resources["RefreshButtonRotateTransform"] as RotateTransform;
+            if (rotatingToAnimate is null) return;
+
+            DoubleAnimation rotateAnimation = new DoubleAnimation()
+            {
+                FillBehavior = FillBehavior.Stop,
+                To = 360,
+                Duration = new Duration(TimeSpan.FromSeconds(1))
+            };
+
+            rotatingToAnimate.BeginAnimation(RotateTransform.AngleProperty, rotateAnimation);
+        }
+
+        private void GetPageCount()
+        {
+            using (var dataBase = new ExcelPackage(GetExcel.downloadPath))
+            {
+                ExcelWorksheet sheet = dataBase.Workbook.Worksheets[1];
+                PageCount = sheet.Dimension.End.Row / ItemsPerPage;
+
+                if (sheet.Dimension.End.Row % ItemsPerPage != 0)
+                    PageCount += 1;
+            }
         }
     }
 }

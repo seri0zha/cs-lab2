@@ -1,18 +1,15 @@
 ﻿using OfficeOpenXml;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Lab_2
 {
     class GetExcel
     {
-        public static readonly FileInfo sourcePath = new FileInfo("thrlist.xlsx");
+        public static readonly FileInfo downloadPath = new FileInfo("thrlist.xlsx");
+        public static readonly FileInfo localPath = new FileInfo("local_thrlist.xlsx");
 
         public static void Download()
         {

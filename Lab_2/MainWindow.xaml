@@ -5,27 +5,82 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab_2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000">
-    <Grid>
+        Title="Excel parser" Height="800
+        " Width="1200">
+    <Window.Resources>
+
+        <RotateTransform x:Key="RefreshButtonRotateTransform" Angle="0"/>
+        <Image x:Key="RefreshImage" Source="Resources/refresh.png"
+               RenderTransformOrigin="0.5 0.5" 
+               RenderTransform="{StaticResource RefreshButtonRotateTransform}"/>
+
+        <Style TargetType="ListBox">
+            <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="ListBoxItem.Margin" Value="5"/>
+                        <Setter Property="ListBoxItem.Background" Value="#fafafa"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition>
-
-            </ColumnDefinition>
-            <ColumnDefinition>
-
-            </ColumnDefinition>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="ThreatList" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="502" VerticalAlignment="Top" Width="496" Margin="0,67,0,0" SelectionChanged="ThreatList_SelectionChanged">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding Properties}"/>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding Properties}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <StackPanel HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="496" Grid.Column="1" Margin="0,67,0,0"/>
 
+        <Grid Column="0">
+
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
+                <Label Content="Threats list" FontSize="30" FontWeight="Bold"/>
+                <Button Content="{StaticResource RefreshImage}" x:Name="RefreshButton"
+                        Width="30" Margin="5 0 0 0" 
+                        BorderThickness="0" Background="Transparent" 
+                        Click="Button_Click">
+                </Button>
+            </StackPanel>
+
+            <ListBox x:Name="ThreatList" Margin="0 50 5 50"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="ThreatList_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock FontSize="14" FontStyle="Italic" TextWrapping="Wrap" Text="{Binding Properties[ID]}"/>
+                            <TextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding Properties[Наименование]}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Content="&lt;&lt;" Width="40" Height="28" Click="Button_Click_2"/>
+                <TextBox Name="PageNumber" Width="40" Height="28"
+                         BorderThickness="0 1 0 1" BorderBrush="Black" 
+                         TextAlignment="Center" FontSize="18" IsHitTestVisible="False"/>
+                <Button Content="&gt;&gt;" Width="40" Height="28" Click="Button_Click_1"/>
+            </StackPanel>
+        </Grid>
+        <Grid Column="1">
+
+            <Label Content="Detailed info" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center"
+                   FontSize="30" FontWeight="Bold"/>
+
+            <ListBox x:Name="DetailedDescription" Margin="5 50 0 50"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock TextDecorations="Underline" FontSize="14" Text="{Binding Path=Key}" />
+                            <TextBlock FontSize="14" TextWrapping="Wrap" Text="{Binding Path=Value}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
     </Grid>
 </Window>
