@@ -36,10 +36,11 @@
         <Grid Column="0">
 
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
-                <Label Content="Threats list" FontSize="30" FontWeight="Bold"/>
+                <Label Content="Список угроз" FontSize="30" FontWeight="Bold"/>
                 <Button Content="{StaticResource RefreshImage}" x:Name="RefreshButton"
                         Width="30" Margin="5 0 0 0" 
                         BorderThickness="0" Background="Transparent" 
+                        IsEnabled="False"
                         Click="Button_Click">
                 </Button>
             </StackPanel>
@@ -66,7 +67,7 @@
         </Grid>
         <Grid Column="1">
 
-            <Label Content="Detailed info" 
+            <Label Content="Подробная информация" 
                    VerticalAlignment="Top" HorizontalAlignment="Center"
                    FontSize="30" FontWeight="Bold"/>
 

@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Windows;
+using System.Threading;
 
 namespace Lab_2
 {
@@ -11,6 +12,14 @@ namespace Lab_2
         public static readonly FileInfo downloadPath = new FileInfo("thrlist.xlsx");
         public static readonly FileInfo localPath = new FileInfo("local_thrlist.xlsx");
 
+        public static void ShowMessageBox(string message)
+        {
+            Thread thread = new Thread(() =>
+            {
+                MessageBox.Show(message);
+            });
+            thread.Start();
+        }
         public static void Download()
         {
             using (var client = new WebClient())
@@ -18,30 +27,22 @@ namespace Lab_2
                 try
                 {
                     client.DownloadFile("https://bdu.fstec.ru/documents/files/thrlist.xlsx", @"thrlist.xlsx");
+                    ShowMessageBox("Файл загружен успешно!");
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"При обновлении данных возникла ошибка! Сообщение: {e.Message}");
+                    ShowMessageBox($"При обновлении данных возникла ошибка: {e.Message}");
                 }
             }
         }
-        public static int StartRow(ExcelWorksheet sheet)
-        {
-            return sheet.Dimension.Start.Row;
-        }
 
-        public static int EndRow(ExcelWorksheet sheet)
+        public static void CopyDownloadedFile()
         {
-            return sheet.Dimension.End.Row;
-        }
-
-        public static int StartCol(ExcelWorksheet sheet)
-        {
-            return sheet.Dimension.Start.Column;
-        }
-        public static int EndCol(ExcelWorksheet sheet)
-        {
-            return sheet.Dimension.End.Column;
+            using (ExcelPackage downloadedFile = new ExcelPackage(downloadPath))
+            {
+                downloadedFile.SaveAs(downloadPath);
+                downloadedFile.SaveAs(localPath);
+            }
         }
     }
 }

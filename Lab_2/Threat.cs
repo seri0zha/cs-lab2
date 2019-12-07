@@ -2,7 +2,7 @@
 
 namespace Lab_2
 {
-    class Note
+    class Threat
     {
         private static HashSet<string> PropertiesSet = new HashSet<string>()
         {
@@ -17,7 +17,7 @@ namespace Lab_2
         };
 
         public Dictionary<string, string> Properties { get; set; }
-        public Note(List<string> args)
+        public Threat(List<string> args)
         {
             Properties = new Dictionary<string, string>();
             int j = 0;
@@ -27,19 +27,5 @@ namespace Lab_2
                 j++;
             }
         }
-
-        public Note()
-        {
-            
-        }
-        /*public override string ToString()
-        {
-            string result = "";
-            foreach (var item in Properties)
-            {
-                result += $"{item.Key}: {item.Value}" + "\n";
-            }
-            return result;
-        }*/
     }
 }

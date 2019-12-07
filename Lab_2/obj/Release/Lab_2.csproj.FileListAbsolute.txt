@@ -1,0 +1,17 @@
+D:\CS-course\cs-lab2\Lab_2\bin\Release\Lab_2.exe.config
+D:\CS-course\cs-lab2\Lab_2\bin\Release\Lab_2.exe
+D:\CS-course\cs-lab2\Lab_2\bin\Release\Lab_2.pdb
+D:\CS-course\cs-lab2\Lab_2\bin\Release\EPPlus.dll
+D:\CS-course\cs-lab2\Lab_2\bin\Release\EPPlus.xml
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2.csprojAssemblyReference.cache
+D:\CS-course\cs-lab2\Lab_2\obj\Release\MainWindow.g.cs
+D:\CS-course\cs-lab2\Lab_2\obj\Release\App.g.cs
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2_MarkupCompile.cache
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2_MarkupCompile.lref
+D:\CS-course\cs-lab2\Lab_2\obj\Release\MainWindow.baml
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2.g.resources
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2.Properties.Resources.resources
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2.csproj.GenerateResource.cache
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2.csproj.CopyComplete
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2.exe
+D:\CS-course\cs-lab2\Lab_2\obj\Release\Lab_2.pdb
